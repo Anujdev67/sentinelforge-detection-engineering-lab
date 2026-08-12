@@ -14,7 +14,7 @@ from telemetry.models import Alert, Incident, IncidentStatus, NormalizedEvent, S
 class EventBatch(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    events: list[NormalizedEvent] = Field(min_length=1, max_length=10_000)
+    events: list[NormalizedEvent] = Field(min_length=1, max_length=1_000)
 
 
 class IngestResult(BaseModel):
