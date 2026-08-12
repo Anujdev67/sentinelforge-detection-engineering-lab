@@ -258,3 +258,16 @@ def test_reputation_lookup_is_safe_cached_and_auditable(client: TestClient) -> N
     )
     assert rejected_url.status_code == 422
     assert "bare IP address or domain" in rejected_url.json()["detail"]
+
+
+def test_security_headers_and_trusted_host_enforcement(client: TestClient) -> None:
+    response = client.get("/api/v1/health")
+    assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-store"
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
+    assert response.headers["referrer-policy"] == "no-referrer"
+    assert response.headers["permissions-policy"] == "camera=(), geolocation=(), microphone=()"
+
+    rejected = client.get("/api/v1/health", headers={"Host": "untrusted.example.test"})
+    assert rejected.status_code == 400
