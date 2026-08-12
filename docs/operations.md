@@ -3,7 +3,7 @@
 ## Container workflow
 
 ```powershell
-Copy-Item .env.example .env
+python -m scripts.create_env
 docker compose up --build -d
 docker compose ps
 docker compose exec api python -m scripts.demo

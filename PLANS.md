@@ -326,3 +326,20 @@ Milestones 0–6 are implemented. Docker build, health, migration, demo, API, fr
 - Backend, detection, frontend lint/test/type/build validation is passing for the expansion.
 - Docker rebuild/health/demo, repository validation, link, secret, prohibited-data, API, IaC, and frontend gates pass.
 - Remaining gate: browser walkthrough and real screenshots, blocked by the Windows browser-runtime ACL failure.
+
+
+### Milestone 14 - repository and runtime security hardening (implemented)
+
+- Docker-published API/dashboard ports are loopback-only; application containers are read-only,
+  drop Linux capabilities, prevent privilege escalation, and use bounded temporary filesystems.
+- Explicit trusted-host and CORS validation, API security headers, dashboard browser headers,
+  request-size limits, bounded ingestion batches, and runtime concurrency limits are enforced.
+- Local setup generates a cryptographically random ignored database password without overwriting
+  an existing configuration.
+- GitHub Actions use immutable commit SHAs, least-privilege permissions, timeouts, and concurrency
+  cancellation. CodeQL, dependency review, Gitleaks, production dependency audits, Trivy image
+  scans, Dependabot, CODEOWNERS, and security regression tests are present.
+- Acceptance evidence: focused security tests, the full Python suite, Ruff, strict MyPy, frontend
+  dependency audit/lint/tests/build, production Python dependency audit, workflow pinning tests,
+  and repository safety checks pass. Docker/Trivy and Terraform runtime validation remain CI gates
+  when local Docker Desktop or Terraform CLI is unavailable.

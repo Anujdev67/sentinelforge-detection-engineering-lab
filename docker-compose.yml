@@ -2,7 +2,7 @@ name: sentinelforge
 
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:16-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?copy .env.example to .env}
@@ -18,6 +18,7 @@ services:
     networks: [soc]
 
   api:
+    image: sentinelforge-api:local
     build:
       context: .
       dockerfile: apps/api/Dockerfile
@@ -27,6 +28,7 @@ services:
       SENTINELFORGE_DEMO_MODE: ${SENTINELFORGE_DEMO_MODE:-false}
       SENTINELFORGE_DATABASE_URL: ${SENTINELFORGE_DATABASE_URL:?copy .env.example to .env}
       SENTINELFORGE_CORS_ORIGINS: ${SENTINELFORGE_CORS_ORIGINS:-http://localhost:5173}
+      SENTINELFORGE_ALLOWED_HOSTS: ${SENTINELFORGE_ALLOWED_HOSTS:-localhost,127.0.0.1,api,testserver}
       SENTINELFORGE_API_URL: ${SENTINELFORGE_API_URL:-http://localhost:8000}
       SENTINELFORGE_LOG_LEVEL: ${SENTINELFORGE_LOG_LEVEL:-INFO}
       SENTINELFORGE_LIVE_REPUTATION_ENABLED: ${SENTINELFORGE_LIVE_REPUTATION_ENABLED:-false}
@@ -39,10 +41,18 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
     networks: [soc]
 
   dashboard:
+    image: sentinelforge-dashboard:local
     build:
       context: .
       dockerfile: apps/dashboard/Dockerfile
@@ -51,7 +61,16 @@ services:
       api:
         condition: service_healthy
     ports:
-      - "5173:8080"
+      - "127.0.0.1:5173:8080"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+      - /var/cache/nginx:rw,noexec,nosuid,size=16m
+      - /var/run:rw,noexec,nosuid,size=4m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
     networks: [soc]
 
 volumes:

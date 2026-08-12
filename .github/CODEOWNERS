@@ -1,0 +1,10 @@
+# The repository owner reviews all changes.
+/ @Anujdev67
+
+# Security-sensitive surfaces require explicit owner review.
+/.github/ @Anujdev67
+/apps/api/ @Anujdev67
+/infrastructure/ @Anujdev67
+/soar/ @Anujdev67
+/.env.example @Anujdev67
+/SECURITY.md @Anujdev67

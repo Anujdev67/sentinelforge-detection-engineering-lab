@@ -4,7 +4,7 @@ PYTHON ?= python
 PNPM ?= pnpm
 
 setup:
-	test -f .env || cp .env.example .env
+	$(PYTHON) -m scripts.create_env
 	$(PYTHON) -m pip install -e ".[dev]"
 	cd apps/dashboard && $(PNPM) install --frozen-lockfile
 

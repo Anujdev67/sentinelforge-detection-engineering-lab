@@ -76,7 +76,7 @@ The current library maps seven of the 15 Enterprise ATT&CK v19.1 tactics and 14 
 Prerequisites: Docker Desktop or Docker Engine with Compose v2. No Azure account is required.
 
 ```powershell
-Copy-Item .env.example .env
+python -m scripts.create_env
 docker compose up --build -d
 docker compose exec api python -m scripts.demo
 ```
@@ -86,7 +86,7 @@ Open [http://localhost:5173](http://localhost:5173). Use [Threat Intelligence](h
 On bash-compatible systems:
 
 ```bash
-cp .env.example .env
+python -m scripts.create_env
 docker compose up --build -d
 make demo
 ```
@@ -176,7 +176,7 @@ Each case uses deterministic alerts and entities visible after the demo reset, i
 - Synthetic telemetry only; fictional `example.test` identities and hosts.
 - IPv4 examples are RFC 5737 documentation ranges; no customer or employer data is accepted.
 - No offensive exploitation, credential attack implementation, real containment adapter, or cloud mutation.
-- `.env` and runtime databases are ignored; `.env.example` contains local placeholders only.
+- `.env` and runtime databases are ignored; `scripts.create_env` replaces template placeholders with a random local database password.
 - Terraform state, plans, provider caches, evidence exports, private keys, and common secret files are ignored.
 - GitHub Actions use read-only repository permissions and a dedicated Gitleaks workflow.
 

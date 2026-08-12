@@ -106,3 +106,22 @@ application screenshots following the provenance checklist.
 
 Until that visual evidence exists, SentinelForge passes the functional, container, content,
 security, IaC, API, and frontend gates but does not claim the screenshot requirement is complete.
+
+
+## Security hardening validation
+
+The repository enforces loopback-only local publishing, explicit hosts/origins, read-only
+application containers, dropped capabilities, no-new-privileges, bounded ingestion, and
+security response headers. Local setup creates a random ignored database password.
+
+Supply-chain gates include immutable GitHub Action SHAs, least-privilege workflow permissions,
+CodeQL, dependency review, Gitleaks, pip-audit, pnpm audit, Trivy image scanning, Dependabot,
+CODEOWNERS, and executable regression tests. Production Python and frontend dependency audits
+reported no known vulnerabilities during the 2026-08-12 review. The pySigma development-only
+dependency currently pulls DiskCache 5.6.3, whose upstream advisory has no fixed release; the
+cache path is excluded from source control, CI is ephemeral/read-only-token scoped, and no
+untrusted cache artifact is consumed by the application runtime.
+
+No scan can prove the absence of every future vulnerability. GitHub administrators must still
+enable private vulnerability reporting, secret scanning and push protection, Dependabot alerts,
+and a protected `main` ruleset requiring the security workflows.
