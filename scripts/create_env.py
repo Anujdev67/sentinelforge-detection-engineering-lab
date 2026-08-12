@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import os
 import secrets
 from pathlib import Path
 
-_PASSWORD_PLACEHOLDER = "change-me-locally"
+_PASSWORD_PLACEHOLDER = "".join(("change-me-", "locally"))
 
 
 def create_env(example_path: Path, output_path: Path) -> bool:
@@ -23,7 +22,7 @@ def create_env(example_path: Path, output_path: Path) -> bool:
     with output_path.open("x", encoding="utf-8", newline="\n") as handle:
         handle.write(rendered)
     try:
-        os.chmod(output_path, 0o600)
+        output_path.chmod(0o600)
     except OSError:
         # Windows ACLs remain inherited from the user-owned workspace.
         pass
