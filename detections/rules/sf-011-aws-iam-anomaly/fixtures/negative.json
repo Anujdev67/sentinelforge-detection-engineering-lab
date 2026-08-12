@@ -1,0 +1,22 @@
+[
+  {
+    "event_id": "evt-sf011-negative-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "AWSCloudTrail",
+    "event_type": "aws_api_call",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "CreateAccessKey",
+    "result": "success",
+    "correlation_id": "corr-sf011-negative",
+    "raw_event_ref": "synthetic://fixtures/sf011-negative-01",
+    "normalized": {
+      "event_name": "CreateAccessKey",
+      "mfa_authenticated": true,
+      "unfamiliar_source": false,
+      "target": "training-user"
+    }
+  }
+]

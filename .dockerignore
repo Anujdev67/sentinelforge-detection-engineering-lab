@@ -1,0 +1,15 @@
+.git
+.github
+.venv
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+apps/dashboard/node_modules
+apps/dashboard/dist
+artifacts
+evidence-packages
+*.db
+*.sqlite*
+infrastructure/terraform/.terraform
+*.tfstate*

@@ -1,0 +1,29 @@
+title: Sensitive AWS IAM API Activity without MFA Context
+id: 7276ac3e-5131-4622-96e0-155a16b70111
+status: stable
+description: Detects sensitive IAM API calls without MFA; unfamiliar-source correlation remains environment-specific.
+author: SentinelForge
+date: 2026-08-11
+modified: 2026-08-11
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection_action:
+    eventName:
+      - CreateAccessKey
+      - AttachUserPolicy
+      - PutUserPolicy
+      - CreateLoginProfile
+  filter_mfa:
+    sessionContext.attributes.mfaAuthenticated: 'true'
+  condition: selection_action and not filter_mfa
+falsepositives:
+  - Approved automation and documented break-glass administration
+level: high
+tags:
+  - attack.persistence
+  - attack.t1098.001
+  - attack.privilege-escalation
+  - attack.t1098
+

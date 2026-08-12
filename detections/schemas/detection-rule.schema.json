@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentinelforge.example/schemas/detection-rule.schema.json",
+  "title": "SentinelForge detection metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "rule_id",
+    "title",
+    "description",
+    "severity",
+    "status",
+    "required_data_sources",
+    "kql_file",
+    "evaluator",
+    "mitre_attack",
+    "entity_mappings",
+    "known_false_positives",
+    "investigation_steps",
+    "containment_recommendations",
+    "threshold",
+    "time_window_minutes",
+    "tuning_required",
+    "version",
+    "changelog"
+  ],
+  "properties": {
+    "rule_id": { "type": "string", "pattern": "^SF-[0-9]{3}$" },
+    "title": { "type": "string", "minLength": 8, "maxLength": 140 },
+    "description": { "type": "string", "minLength": 30 },
+    "severity": { "enum": ["informational", "low", "medium", "high", "critical"] },
+    "status": { "enum": ["stable", "test", "experimental", "deprecated"] },
+    "required_data_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "SigninLogs", "AuditLogs", "SecurityEvent", "DeviceProcessEvents",
+          "DeviceNetworkEvents", "DeviceLogonEvents", "CommonSecurityLog",
+          "OfficeActivity", "AzureActivity", "AWSCloudTrail", "GuardDuty"
+        ]
+      }
+    },
+    "kql_file": { "type": "string", "pattern": "^[a-z0-9_-]+\\.kql$" },
+    "sigma_file": { "type": ["string", "null"], "pattern": "^[a-z0-9_-]+\\.yml$" },
+    "evaluator": { "type": "string", "pattern": "^[a-z][a-z0-9_]+$" },
+    "mitre_attack": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tactic", "tactic_name", "technique", "technique_name"],
+        "properties": {
+          "tactic": { "type": "string", "pattern": "^TA[0-9]{4}$" },
+          "tactic_name": { "type": "string", "minLength": 3 },
+          "technique": { "type": "string", "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$" },
+          "technique_name": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "entity_mappings": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "known_false_positives": { "$ref": "#/$defs/nonEmptyStringList" },
+    "investigation_steps": {
+      "allOf": [{ "$ref": "#/$defs/nonEmptyStringList" }, { "minItems": 2 }]
+    },
+    "containment_recommendations": { "$ref": "#/$defs/nonEmptyStringList" },
+    "threshold": { "type": "integer", "minimum": 1 },
+    "time_window_minutes": { "type": "integer", "minimum": 1, "maximum": 10080 },
+    "tuning_required": { "type": "boolean" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "changelog": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "date", "changes"],
+        "properties": {
+          "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+          "date": { "type": "string", "format": "date" },
+          "changes": { "type": "string", "minLength": 8 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyStringList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 3 }
+    }
+  }
+}
+

@@ -1,0 +1,18 @@
+{
+  "artifact_type": "logic-app-pseudodeployment",
+  "artifact_version": "1.0.0",
+  "name": "sentinelforge-incident-evidence-packaging",
+  "deployable": false,
+  "simulation_notice": "Architecture reference only. Evidence retention, legal hold, access control, and storage are deployment-owner decisions.",
+  "trigger": {"connector": "Microsoft Sentinel", "event": "analyst-requested-evidence-package"},
+  "approval_gate": {"required": true, "separation_of_duties": true, "before": "evidence-export"},
+  "steps": [
+    {"order": 1, "connector": "Microsoft Sentinel", "operation": "get-incident-alerts-comments-and-entities", "mode": "read-only"},
+    {"order": 2, "connector": "Microsoft Defender XDR", "operation": "get-referenced-evidence-metadata", "mode": "read-only"},
+    {"order": 3, "connector": "Approvals", "operation": "approve-scope-and-retention", "mode": "approval"},
+    {"order": 4, "connector": "Controlled evidence storage", "operation": "write-integrity-manifest-and-package", "mode": "export"},
+    {"order": 5, "connector": "Microsoft Sentinel", "operation": "record-package-reference", "mode": "write-incident-only"}
+  ],
+  "forbidden_actions": ["export-secrets", "public-share", "delete-source-evidence"],
+  "audit": {"record_actor": true, "record_decision": true, "record_connector_result": true}
+}

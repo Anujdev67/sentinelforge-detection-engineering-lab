@@ -1,0 +1,29 @@
+// SentinelForge SF-012 — low-jitter sessions in Palo Alto-style CommonSecurityLog.
+let TimeWindow = 15m;
+let SessionThreshold = 6;
+CommonSecurityLog
+| where TimeGenerated > ago(TimeWindow)
+| where DeviceVendor =~ "Palo Alto Networks" and DeviceAction in~ ("allow", "allowed")
+| sort by SourceIP asc, DestinationIP asc, DestinationPort asc, TimeGenerated asc
+| serialize
+| extend
+    PreviousSource = prev(SourceIP),
+    PreviousDestination = prev(DestinationIP),
+    PreviousPort = prev(DestinationPort),
+    PreviousTime = prev(TimeGenerated)
+| extend IntervalSeconds = iff(
+    SourceIP == PreviousSource and DestinationIP == PreviousDestination and DestinationPort == PreviousPort,
+    datetime_diff("second", TimeGenerated, PreviousTime),
+    long(null)
+)
+| summarize
+    SessionCount = count(),
+    AverageInterval = avg(IntervalSeconds),
+    IntervalJitter = stdev(IntervalSeconds),
+    FirstObserved = min(TimeGenerated),
+    LastObserved = max(TimeGenerated),
+    Applications = make_set(ApplicationProtocol, 20)
+    by SourceIP, DestinationIP, DestinationPort, SourceHostName
+| where SessionCount >= SessionThreshold and AverageInterval between (30.0 .. 120.0) and IntervalJitter <= 5.0
+| project FirstObserved, LastObserved, SourceHostName, SourceIP, DestinationIP, DestinationPort, SessionCount, AverageInterval, IntervalJitter, Applications
+

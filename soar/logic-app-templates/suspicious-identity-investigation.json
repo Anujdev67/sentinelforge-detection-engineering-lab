@@ -1,0 +1,18 @@
+{
+  "artifact_type": "logic-app-pseudodeployment",
+  "artifact_version": "1.0.0",
+  "name": "sentinelforge-suspicious-identity-investigation",
+  "deployable": false,
+  "simulation_notice": "Architecture reference only. It does not disable users, revoke sessions, or change Microsoft Entra ID.",
+  "trigger": {"connector": "Microsoft Sentinel", "event": "incident-created"},
+  "approval_gate": {"required": true, "separation_of_duties": true, "before": "any-containment-branch"},
+  "steps": [
+    {"order": 1, "connector": "Microsoft Sentinel", "operation": "get-incident-and-entities", "mode": "read-only"},
+    {"order": 2, "connector": "Microsoft Defender XDR", "operation": "get-related-alert-context", "mode": "read-only"},
+    {"order": 3, "connector": "Microsoft Entra ID", "operation": "get-user-risk-and-sign-in-context", "mode": "read-only"},
+    {"order": 4, "connector": "Approvals", "operation": "request-human-containment-decision", "mode": "approval"},
+    {"order": 5, "connector": "Microsoft Sentinel", "operation": "add-investigation-comment", "mode": "write-incident-only"}
+  ],
+  "forbidden_actions": ["disable-user", "revoke-session", "reset-password"],
+  "audit": {"record_actor": true, "record_decision": true, "record_connector_result": true}
+}

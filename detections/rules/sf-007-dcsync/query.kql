@@ -1,0 +1,14 @@
+// SentinelForge SF-007 — directory replication rights outside approved principals.
+let TimeWindow = 15m;
+let ApprovedReplicationPrincipals = dynamic(["dc01$", "dc02$", "sync-service"]);
+SecurityEvent
+| where TimeGenerated > ago(TimeWindow)
+| where EventID == 4662
+| where Properties has_any (
+    "DS-Replication-Get-Changes",
+    "DS-Replication-Get-Changes-All",
+    "1131f6ad-9c07-11d1-f79f-00c04fc2dcd2"
+)
+| where SubjectUserName !in~ (ApprovedReplicationPrincipals)
+| project TimeGenerated, Computer, SubjectDomainName, SubjectUserName, ObjectName, ObjectType, Properties, Activity
+

@@ -1,0 +1,12 @@
+{
+  "incident_id": "inc-7b5b6a71127997",
+  "title": "Unauthorized AnyDesk or TeamViewer execution",
+  "severity": "high",
+  "status_after_demo": "new",
+  "first_observed": "2026-02-03T14:00:00Z",
+  "last_observed": "2026-02-03T14:00:00Z",
+  "alert_ids": ["alert-sf-009-debff6c2b408"],
+  "rule_ids": ["SF-009"],
+  "primary_entities": ["ws-909.sentinelforge.test", "remote.user@example.test", "AnyDesk.exe"],
+  "data_classification": "synthetic-only"
+}

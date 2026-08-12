@@ -1,0 +1,78 @@
+[
+  {
+    "event_id": "evt-sf001-negative-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "SigninLogs",
+    "event_type": "interactive_sign_in",
+    "host": "ws-417.sentinelforge.test",
+    "user": "training.user1@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "authenticate",
+    "result": "failure",
+    "correlation_id": "corr-sf001-negative",
+    "raw_event_ref": "synthetic://fixtures/sf001-negative-01",
+    "normalized": {
+      "result_code": "50126",
+      "country": "GB",
+      "application": "Lab Portal"
+    }
+  },
+  {
+    "event_id": "evt-sf001-negative-02",
+    "timestamp": "2026-02-03T14:01:00Z",
+    "event_source": "SigninLogs",
+    "event_type": "interactive_sign_in",
+    "host": "ws-417.sentinelforge.test",
+    "user": "training.user2@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "authenticate",
+    "result": "failure",
+    "correlation_id": "corr-sf001-negative",
+    "raw_event_ref": "synthetic://fixtures/sf001-negative-02",
+    "normalized": {
+      "result_code": "50126",
+      "country": "GB",
+      "application": "Lab Portal"
+    }
+  },
+  {
+    "event_id": "evt-sf001-negative-03",
+    "timestamp": "2026-02-03T14:02:00Z",
+    "event_source": "SigninLogs",
+    "event_type": "interactive_sign_in",
+    "host": "ws-417.sentinelforge.test",
+    "user": "training.user3@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "authenticate",
+    "result": "failure",
+    "correlation_id": "corr-sf001-negative",
+    "raw_event_ref": "synthetic://fixtures/sf001-negative-03",
+    "normalized": {
+      "result_code": "50126",
+      "country": "GB",
+      "application": "Lab Portal"
+    }
+  },
+  {
+    "event_id": "evt-sf001-negative-04",
+    "timestamp": "2026-02-03T14:03:00Z",
+    "event_source": "SigninLogs",
+    "event_type": "interactive_sign_in",
+    "host": "ws-417.sentinelforge.test",
+    "user": "training.user4@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "authenticate",
+    "result": "failure",
+    "correlation_id": "corr-sf001-negative",
+    "raw_event_ref": "synthetic://fixtures/sf001-negative-04",
+    "normalized": {
+      "result_code": "50126",
+      "country": "GB",
+      "application": "Lab Portal"
+    }
+  }
+]

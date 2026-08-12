@@ -1,0 +1,12 @@
+{
+  "incident_id": "inc-52fe50efc453c4",
+  "title": "Correlated activity across 2 alerts",
+  "severity": "high",
+  "status_after_demo": "new",
+  "first_observed": "2026-02-03T14:00:00Z",
+  "last_observed": "2026-02-03T14:04:00Z",
+  "alert_ids": ["alert-sf-001-bcc40dfc9159", "alert-sf-002-255d48dc53ca"],
+  "rule_ids": ["SF-001", "SF-002"],
+  "primary_entities": ["alex.morgan@example.test", "198.51.100.77"],
+  "data_classification": "synthetic-only"
+}

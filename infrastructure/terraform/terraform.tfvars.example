@@ -1,0 +1,13 @@
+location               = "uksouth"
+name_prefix            = "sentinelforge-lab"
+retention_in_days      = 30
+daily_quota_gb         = 0.1
+enable_entra_connector = false
+enable_analytics_rules = false
+
+tags = {
+  project     = "SentinelForge"
+  environment = "training"
+  data_class  = "synthetic-only"
+  owner       = "replace-with-team-name"
+}

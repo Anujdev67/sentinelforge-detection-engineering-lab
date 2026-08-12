@@ -1,0 +1,24 @@
+{
+  "rule_id": "SF-012",
+  "alert_count": 1,
+  "evidence_event_ids": [
+    "evt-sf012-positive-01",
+    "evt-sf012-positive-02",
+    "evt-sf012-positive-03",
+    "evt-sf012-positive-04",
+    "evt-sf012-positive-05",
+    "evt-sf012-positive-06"
+  ],
+  "entities": {
+    "ip": [
+      "198.51.100.112",
+      "203.0.113.212"
+    ],
+    "host": [
+      "ws-712.sentinelforge.test"
+    ],
+    "port": [
+      "443"
+    ]
+  }
+}

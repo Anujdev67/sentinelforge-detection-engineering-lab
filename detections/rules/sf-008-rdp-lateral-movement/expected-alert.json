@@ -1,0 +1,22 @@
+{
+  "rule_id": "SF-008",
+  "alert_count": 1,
+  "evidence_event_ids": [
+    "evt-sf008-positive-01",
+    "evt-sf008-positive-02",
+    "evt-sf008-positive-03"
+  ],
+  "entities": {
+    "account": [
+      "alex.morgan@example.test"
+    ],
+    "ip": [
+      "198.51.100.77"
+    ],
+    "host": [
+      "srv-601.sentinelforge.test",
+      "srv-602.sentinelforge.test",
+      "srv-603.sentinelforge.test"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "event_id": "evt-sf008-negative-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "DeviceLogonEvents",
+    "event_type": "device_logon",
+    "host": "srv-601.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "logon",
+    "result": "success",
+    "correlation_id": "corr-sf008-negative",
+    "raw_event_ref": "synthetic://fixtures/sf008-negative-01",
+    "normalized": {
+      "logon_type": "RemoteInteractive",
+      "protocol": "RDP"
+    }
+  },
+  {
+    "event_id": "evt-sf008-negative-02",
+    "timestamp": "2026-02-03T14:05:00Z",
+    "event_source": "DeviceLogonEvents",
+    "event_type": "device_logon",
+    "host": "srv-602.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "logon",
+    "result": "success",
+    "correlation_id": "corr-sf008-negative",
+    "raw_event_ref": "synthetic://fixtures/sf008-negative-02",
+    "normalized": {
+      "logon_type": "RemoteInteractive",
+      "protocol": "RDP"
+    }
+  }
+]

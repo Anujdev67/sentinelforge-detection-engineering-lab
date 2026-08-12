@@ -1,0 +1,22 @@
+title: Successful Remote Desktop Logon
+id: 8c62d55e-54cb-4bf9-97e1-f272fd050108
+status: stable
+description: Detects the constituent successful RDP logons aggregated by SentinelForge SF-008.
+author: SentinelForge
+date: 2026-08-11
+modified: 2026-08-11
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4624
+    LogonType: 10
+  condition: selection
+falsepositives:
+  - Approved remote administration and help-desk access
+level: medium
+tags:
+  - attack.lateral-movement
+  - attack.t1021.001
+

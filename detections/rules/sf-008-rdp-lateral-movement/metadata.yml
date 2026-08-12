@@ -1,0 +1,37 @@
+rule_id: SF-008
+title: RDP lateral movement across multiple devices
+description: Detects one identity and source address successfully opening remote-interactive logons to three or more devices within thirty minutes.
+severity: high
+status: stable
+required_data_sources: [DeviceLogonEvents]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: rdp_lateral_movement
+mitre_attack:
+  - tactic: TA0008
+    tactic_name: Lateral Movement
+    technique: T1021.001
+    technique_name: Remote Desktop Protocol
+entity_mappings:
+  account: AccountName
+  ip: RemoteIP
+  host: DeviceName
+known_false_positives:
+  - Help-desk or server-administration activity performed from an approved privileged access workstation.
+  - Synthetic maintenance exercises covering multiple lab devices.
+investigation_steps:
+  - Review source-device ownership, target criticality, account privilege, logon timing, and interactive session activity.
+  - Correlate with process creation, credential use, remote-service changes, and endpoint alerts on every target.
+  - Confirm an approved support or maintenance ticket exists for the multi-host session pattern.
+containment_recommendations:
+  - Recommend ending sessions or isolating devices only after human review of administrative impact.
+  - If compromise is confirmed, scope every target and rotate exposed privileged credentials through approved procedures.
+threshold: 3
+time_window_minutes: 30
+tuning_required: true
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial multi-device RDP fan-out rule with privileged-access tuning notes.
+

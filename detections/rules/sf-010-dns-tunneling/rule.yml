@@ -1,0 +1,20 @@
+title: DNS Query with an Unusually Long Leading Label
+id: 28e2e717-49cf-4ff1-b287-f2a8a3dd0110
+status: stable
+description: Detects constituent long-label DNS queries aggregated by SentinelForge SF-010.
+author: SentinelForge
+date: 2026-08-11
+modified: 2026-08-11
+logsource:
+  category: dns
+detection:
+  selection:
+    query|re: '^[A-Za-z0-9_-]{45,}\.'
+  condition: selection
+falsepositives:
+  - Content-delivery, security, tracking, and anti-abuse services
+level: medium
+tags:
+  - attack.command-and-control
+  - attack.t1071.004
+

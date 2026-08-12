@@ -1,0 +1,15 @@
+// SentinelForge SF-008 — multi-device RDP fan-out.
+let TimeWindow = 30m;
+let DeviceThreshold = 3;
+DeviceLogonEvents
+| where Timestamp > ago(TimeWindow)
+| where LogonType =~ "RemoteInteractive" and ActionType =~ "LogonSuccess"
+| summarize
+    TargetDeviceCount = dcount(DeviceName),
+    TargetDevices = make_set(DeviceName, 100),
+    FirstObserved = min(Timestamp),
+    LastObserved = max(Timestamp)
+    by AccountName, AccountDomain, RemoteIP
+| where TargetDeviceCount >= DeviceThreshold
+| project FirstObserved, LastObserved, AccountDomain, AccountName, RemoteIP, TargetDeviceCount, TargetDevices
+

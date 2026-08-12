@@ -1,0 +1,36 @@
+rule_id: SF-010
+title: DNS tunnelling indicators from long unique labels
+description: Detects four or more unique DNS queries with unusually long leading labels from one device inside a ten-minute window.
+severity: medium
+status: stable
+required_data_sources: [DeviceNetworkEvents]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: dns_tunneling
+mitre_attack:
+  - tactic: TA0011
+    tactic_name: Command and Control
+    technique: T1071.004
+    technique_name: DNS
+entity_mappings:
+  host: DeviceName
+  domain: RemoteUrl
+known_false_positives:
+  - Content-delivery, endpoint-security, tracking, or anti-abuse products generating long randomized labels.
+  - Internal testing of DNS capacity, encoding, or delegated zones.
+investigation_steps:
+  - Inspect query frequency, label entropy, record types, response codes, domain age, process lineage, and resolver path.
+  - Compare the domain and initiating process across other devices and network telemetry.
+  - Determine whether payload-like labels recur and whether outbound traffic follows DNS responses.
+containment_recommendations:
+  - Recommend DNS blocking only after domain ownership and enterprise-service dependencies are understood.
+  - If confirmed malicious, isolate the affected endpoint through a human-approved process and preserve DNS evidence.
+threshold: 4
+time_window_minutes: 10
+tuning_required: true
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial long-label and unique-query aggregation with process-focused tuning guidance.
+

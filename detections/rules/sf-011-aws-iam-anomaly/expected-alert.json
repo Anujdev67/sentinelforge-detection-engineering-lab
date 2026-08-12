@@ -1,0 +1,18 @@
+{
+  "rule_id": "SF-011",
+  "alert_count": 1,
+  "evidence_event_ids": [
+    "evt-sf011-positive-01"
+  ],
+  "entities": {
+    "account": [
+      "alex.morgan@example.test"
+    ],
+    "ip": [
+      "198.51.100.77"
+    ],
+    "cloud_resource": [
+      "training-user"
+    ]
+  }
+}

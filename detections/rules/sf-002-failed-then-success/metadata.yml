@@ -1,0 +1,40 @@
+rule_id: SF-002
+title: Repeated failed authentication followed by success
+description: Detects four or more failed sign-ins for one identity and source followed by a successful authentication within fifteen minutes.
+severity: high
+status: stable
+required_data_sources: [SigninLogs]
+kql_file: query.kql
+sigma_file: null
+evaluator: failed_then_success
+mitre_attack:
+  - tactic: TA0006
+    tactic_name: Credential Access
+    technique: T1110
+    technique_name: Brute Force
+  - tactic: TA0001
+    tactic_name: Initial Access
+    technique: T1078.004
+    technique_name: Cloud Accounts
+entity_mappings:
+  account: UserPrincipalName
+  ip: IPAddress
+known_false_positives:
+  - A user correcting a recently changed password on several cached clients.
+  - A mobile client retrying stale credentials immediately before interactive success.
+investigation_steps:
+  - Compare failure codes, client applications, devices, user agents, locations, and authentication requirements.
+  - Validate the successful session with the identity owner using an approved out-of-band process.
+  - Hunt for post-authentication mailbox, directory, endpoint, and Azure control-plane activity.
+containment_recommendations:
+  - If compromise is confirmed, recommend session revocation and credential reset through an approved human-led procedure.
+  - Preserve authentication evidence before changing local incident status to simulated containment.
+threshold: 4
+time_window_minutes: 15
+tuning_required: false
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial ordered failure-to-success correlation with source and identity grouping.
+

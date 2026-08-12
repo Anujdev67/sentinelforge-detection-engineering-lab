@@ -1,0 +1,17 @@
+// SentinelForge SF-001 — authoritative Microsoft Sentinel example.
+let TimeWindow = 10m;
+let DistinctAccountThreshold = 5;
+SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+// 50126 represents invalid username or password and excludes MFA challenge outcomes.
+| where ResultType == "50126"
+| summarize
+    FailedAttempts = count(),
+    DistinctAccounts = dcount(UserPrincipalName),
+    TargetedAccounts = make_set(UserPrincipalName, 100),
+    Applications = make_set(AppDisplayName, 20),
+    FirstObserved = min(TimeGenerated),
+    LastObserved = max(TimeGenerated)
+    by IPAddress
+| where DistinctAccounts >= DistinctAccountThreshold
+| project FirstObserved, LastObserved, IPAddress, FailedAttempts, DistinctAccounts, TargetedAccounts, Applications

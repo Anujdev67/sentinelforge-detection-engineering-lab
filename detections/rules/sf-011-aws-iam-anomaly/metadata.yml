@@ -1,0 +1,40 @@
+rule_id: SF-011
+title: Anomalous AWS IAM administrative API activity
+description: Detects sensitive AWS IAM API operations from an unfamiliar synthetic source when CloudTrail context does not show MFA authentication.
+severity: high
+status: stable
+required_data_sources: [AWSCloudTrail]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: anomalous_aws_iam
+mitre_attack:
+  - tactic: TA0003
+    tactic_name: Persistence
+    technique: T1098.001
+    technique_name: Additional Cloud Credentials
+  - tactic: TA0004
+    tactic_name: Privilege Escalation
+    technique: T1098
+    technique_name: Account Manipulation
+entity_mappings:
+  account: UserIdentityArn
+  ip: SourceIpAddress
+  cloud_resource: RequestParameters
+known_false_positives:
+  - Approved automation roles creating credentials or policies from a newly provisioned runner.
+  - Break-glass administration performed under a documented exception without session MFA context.
+investigation_steps:
+  - Review actor ARN, assumed-role chain, source, user agent, region, request parameters, and CloudTrail event history.
+  - Confirm a change record and compare the source with governed automation and administrative locations.
+  - Hunt for subsequent credential use, policy changes, access attempts, and related GuardDuty findings.
+containment_recommendations:
+  - Recommend disabling newly created credentials or reverting policy changes only after human approval and dependency analysis.
+  - Preserve CloudTrail evidence and rotate affected credentials through the organization's approved cloud process.
+threshold: 1
+time_window_minutes: 30
+tuning_required: true
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial sensitive IAM action rule combining unfamiliar-source and missing-MFA context.

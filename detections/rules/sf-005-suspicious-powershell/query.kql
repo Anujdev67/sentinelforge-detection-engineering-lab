@@ -1,0 +1,14 @@
+// SentinelForge SF-005 — process command-line behavior in Microsoft Defender XDR.
+let TimeWindow = 15m;
+DeviceProcessEvents
+| where Timestamp > ago(TimeWindow)
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| where ProcessCommandLine has_any (
+    "-EncodedCommand",
+    " -enc ",
+    "FromBase64String",
+    "Invoke-WebRequest",
+    "-WindowStyle Hidden"
+)
+| project Timestamp, DeviceName, AccountUpn, FileName, ProcessCommandLine, InitiatingProcessFileName, SHA256, ReportId
+

@@ -1,0 +1,36 @@
+rule_id: SF-004
+title: Microsoft Entra ID MFA fatigue followed by approval
+description: Detects at least five denied MFA prompts for an identity followed by an approval inside a thirty-minute activity window.
+severity: high
+status: stable
+required_data_sources: [SigninLogs]
+kql_file: query.kql
+sigma_file: null
+evaluator: mfa_fatigue
+mitre_attack:
+  - tactic: TA0006
+    tactic_name: Credential Access
+    technique: T1621
+    technique_name: Multi-Factor Authentication Request Generation
+entity_mappings:
+  account: UserPrincipalName
+  ip: IPAddress
+known_false_positives:
+  - Repeated prompts caused by a legitimate application loop or an interrupted authenticator migration.
+  - Synthetic MFA workflow testing with a documented change record.
+investigation_steps:
+  - Review prompt timing, source addresses, applications, authentication methods, device details, and number matching.
+  - Confirm whether the identity owner intentionally approved the final request.
+  - Hunt for new sessions, authentication-method changes, OAuth grants, and mailbox or directory actions.
+containment_recommendations:
+  - Recommend revoking sessions and resetting authentication methods only after human approval and owner verification.
+  - Consider number matching, authentication strengths, and risk-based access policies as preventive controls.
+threshold: 5
+time_window_minutes: 30
+tuning_required: false
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial denial-to-approval MFA sequence with identity-focused evidence.
+

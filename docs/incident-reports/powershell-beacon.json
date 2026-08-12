@@ -1,0 +1,12 @@
+{
+  "incident_id": "inc-49a8e3332bd37f",
+  "title": "Correlated activity across 2 alerts",
+  "severity": "high",
+  "status_after_demo": "new",
+  "first_observed": "2026-02-03T14:00:00Z",
+  "last_observed": "2026-02-03T14:05:00Z",
+  "alert_ids": ["alert-sf-005-6d0f9d3efeea", "alert-sf-012-33ba2a0b007e"],
+  "rule_ids": ["SF-005", "SF-012"],
+  "primary_entities": ["ws-417.sentinelforge.test", "casey.lee@example.test", "203.0.113.212:443"],
+  "data_classification": "synthetic-only"
+}

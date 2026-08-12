@@ -1,0 +1,37 @@
+rule_id: SF-009
+title: Unauthorized AnyDesk or TeamViewer execution
+description: Detects execution of supported remote-access tools on a device when the synthetic approval context does not mark that session as authorized.
+severity: high
+status: stable
+required_data_sources: [DeviceProcessEvents]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: unauthorized_remote_tool
+mitre_attack:
+  - tactic: TA0011
+    tactic_name: Command and Control
+    technique: T1219.002
+    technique_name: Remote Desktop Software
+entity_mappings:
+  account: AccountUpn
+  host: DeviceName
+  process: FileName
+known_false_positives:
+  - Approved help-desk sessions where deployment or ticket metadata has not reached the watchlist.
+  - Personally installed support tooling explicitly permitted on a segregated training device.
+investigation_steps:
+  - Validate installer source, signer, hash, parent process, execution account, service creation, and support ticket.
+  - Review network destinations, session timing, file transfers, persistence, and follow-on process activity.
+  - Confirm device policy and whether another sanctioned support tool should have been used.
+containment_recommendations:
+  - Recommend uninstalling or blocking the tool only after a human confirms that no approved support session is active.
+  - If misuse is confirmed, scope connected endpoints and review data-access activity before recovery.
+threshold: 1
+time_window_minutes: 15
+tuning_required: false
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial remote-support process rule with explicit synthetic approval context.
+

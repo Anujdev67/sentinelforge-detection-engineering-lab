@@ -1,0 +1,19 @@
+// SentinelForge SF-010 — long, unique DNS labels from Defender network telemetry.
+let TimeWindow = 10m;
+let UniqueQueryThreshold = 4;
+let LabelLengthThreshold = 45;
+DeviceNetworkEvents
+| where Timestamp > ago(TimeWindow)
+| where ActionType =~ "DnsConnectionInspected" or RemotePort == 53
+| extend LeadingLabel = tostring(split(RemoteUrl, ".")[0])
+| where strlen(LeadingLabel) >= LabelLengthThreshold
+| summarize
+    UniqueQueries = dcount(RemoteUrl),
+    Queries = make_set(RemoteUrl, 100),
+    InitiatingProcesses = make_set(InitiatingProcessFileName, 20),
+    FirstObserved = min(Timestamp),
+    LastObserved = max(Timestamp)
+    by DeviceName
+| where UniqueQueries >= UniqueQueryThreshold
+| project FirstObserved, LastObserved, DeviceName, UniqueQueries, Queries, InitiatingProcesses
+

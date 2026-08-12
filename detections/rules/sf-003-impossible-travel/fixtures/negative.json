@@ -1,0 +1,40 @@
+[
+  {
+    "event_id": "evt-sf003-negative-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "SigninLogs",
+    "event_type": "interactive_sign_in",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.80",
+    "destination_ip": "203.0.113.44",
+    "action": "authenticate",
+    "result": "success",
+    "correlation_id": "corr-sf003-negative",
+    "raw_event_ref": "synthetic://fixtures/sf003-negative-01",
+    "normalized": {
+      "latitude": 47.6062,
+      "longitude": -122.3321,
+      "country": "US"
+    }
+  },
+  {
+    "event_id": "evt-sf003-negative-02",
+    "timestamp": "2026-02-03T15:00:00Z",
+    "event_source": "SigninLogs",
+    "event_type": "interactive_sign_in",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.81",
+    "destination_ip": "203.0.113.44",
+    "action": "authenticate",
+    "result": "success",
+    "correlation_id": "corr-sf003-negative",
+    "raw_event_ref": "synthetic://fixtures/sf003-negative-02",
+    "normalized": {
+      "latitude": 45.5152,
+      "longitude": -122.6784,
+      "country": "GB"
+    }
+  }
+]

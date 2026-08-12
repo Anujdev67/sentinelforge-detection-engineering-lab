@@ -1,0 +1,16 @@
+// SentinelForge SF-002 — ordered authentication outcome correlation.
+let TimeWindow = 15m;
+let FailureThreshold = 4;
+SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+// Scope the sequence to invalid-credential failures and successful authentications.
+| where ResultType in ("0", "50126")
+| summarize
+    FailedAttempts = countif(ResultType != "0"),
+    LastFailure = maxif(TimeGenerated, ResultType != "0"),
+    FirstSuccess = minif(TimeGenerated, ResultType == "0"),
+    Applications = make_set(AppDisplayName, 20),
+    Devices = make_set(tostring(DeviceDetail.displayName), 20)
+    by UserPrincipalName, IPAddress
+| where FailedAttempts >= FailureThreshold and isnotnull(FirstSuccess) and FirstSuccess > LastFailure
+| project UserPrincipalName, IPAddress, FailedAttempts, LastFailure, FirstSuccess, Applications, Devices

@@ -1,0 +1,20 @@
+[
+  {
+    "event_id": "evt-sf009-negative-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "DeviceProcessEvents",
+    "event_type": "process_created",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "process_start",
+    "result": "success",
+    "correlation_id": "corr-sf009-negative",
+    "raw_event_ref": "synthetic://fixtures/sf009-negative-01",
+    "normalized": {
+      "file_name": "AnyDesk.exe",
+      "approved_remote_support": true
+    }
+  }
+]

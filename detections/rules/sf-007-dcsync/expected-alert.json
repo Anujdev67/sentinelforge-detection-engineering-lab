@@ -1,0 +1,18 @@
+{
+  "rule_id": "SF-007",
+  "alert_count": 1,
+  "evidence_event_ids": [
+    "evt-sf007-positive-01"
+  ],
+  "entities": {
+    "account": [
+      "alex.morgan@example.test"
+    ],
+    "host": [
+      "dc-01.sentinelforge.test"
+    ],
+    "domain": [
+      "sentinelforge.test"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+// SentinelForge SF-011 — assumes normalized AWS CloudTrail table and governed familiar-source watchlist.
+let TimeWindow = 30m;
+let SensitiveActions = dynamic(["CreateAccessKey", "AttachUserPolicy", "PutUserPolicy", "CreateLoginProfile"]);
+AWSCloudTrail
+| where TimeGenerated > ago(TimeWindow)
+| where EventName in (SensitiveActions)
+| where tostring(SessionContextAttributesMfaAuthenticated) !~ "true"
+| where UnfamiliarSource == true
+| project TimeGenerated, EventName, UserIdentityArn, SourceIpAddress, UserAgent, AwsRegion, RequestParameters, EventId
+

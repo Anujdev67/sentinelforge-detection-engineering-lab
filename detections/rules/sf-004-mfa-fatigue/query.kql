@@ -1,0 +1,18 @@
+// SentinelForge SF-004 — repeated denied MFA prompts followed by approval.
+let TimeWindow = 30m;
+let DenialThreshold = 5;
+SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+| mv-expand AuthenticationStep = AuthenticationDetails
+| extend StepDetail = tostring(AuthenticationStep.authenticationStepResultDetail)
+| summarize
+    DeniedPrompts = countif(StepDetail has_any ("denied", "declined")),
+    ApprovedPrompts = countif(StepDetail has_any ("satisfied", "approved")),
+    FirstObserved = min(TimeGenerated),
+    LastObserved = max(TimeGenerated),
+    SourceIPs = make_set(IPAddress, 20),
+    Applications = make_set(AppDisplayName, 20)
+    by UserPrincipalName
+| where DeniedPrompts >= DenialThreshold and ApprovedPrompts > 0
+| project FirstObserved, LastObserved, UserPrincipalName, SourceIPs, DeniedPrompts, ApprovedPrompts, Applications
+

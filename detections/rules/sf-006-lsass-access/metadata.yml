@@ -1,0 +1,37 @@
+rule_id: SF-006
+title: Unapproved process access to LSASS memory
+description: Detects Defender XDR process evidence showing an unapproved process requesting memory-read or process-dump access to LSASS.
+severity: critical
+status: stable
+required_data_sources: [DeviceProcessEvents]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: lsass_access
+mitre_attack:
+  - tactic: TA0006
+    tactic_name: Credential Access
+    technique: T1003.001
+    technique_name: LSASS Memory
+entity_mappings:
+  account: AccountUpn
+  host: DeviceName
+  process: FileName
+known_false_positives:
+  - Approved endpoint security, diagnostics, or crash-dump tooling with validated signer and deployment context.
+  - Authorized memory forensics performed under an incident-response change record.
+investigation_steps:
+  - Validate the process signer, hash, parent process, account, access type, and endpoint security-product context.
+  - Correlate with suspicious process execution, archive creation, outbound transfer, and credential-use events.
+  - Confirm whether memory acquisition was authorized before escalating containment.
+containment_recommendations:
+  - Treat confirmed access as high-impact and recommend isolation through a human-approved endpoint workflow.
+  - Recommend credential rotation based on confirmed exposure scope, never solely on the local simulation.
+threshold: 1
+time_window_minutes: 10
+tuning_required: false
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial LSASS target-process behavior with explicit security-tool exception guidance.
+

@@ -1,0 +1,23 @@
+{
+  "rule_id": "SF-001",
+  "alert_count": 1,
+  "evidence_event_ids": [
+    "evt-sf001-positive-01",
+    "evt-sf001-positive-02",
+    "evt-sf001-positive-03",
+    "evt-sf001-positive-04",
+    "evt-sf001-positive-05"
+  ],
+  "entities": {
+    "ip": [
+      "198.51.100.77"
+    ],
+    "account": [
+      "training.user1@example.test",
+      "training.user2@example.test",
+      "training.user3@example.test",
+      "training.user4@example.test",
+      "training.user5@example.test"
+    ]
+  }
+}

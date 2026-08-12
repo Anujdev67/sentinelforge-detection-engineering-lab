@@ -1,0 +1,26 @@
+title: Directory Replication Rights Used by an Unapproved Identity
+id: 2c84f32c-d8a9-45f0-bc73-93e3f2030107
+status: stable
+description: Detects Windows event 4662 containing directory replication rights, aligned with SentinelForge SF-007.
+author: SentinelForge
+date: 2026-08-11
+modified: 2026-08-11
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4662
+    Properties|contains:
+      - 'DS-Replication-Get-Changes-All'
+      - '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2'
+  filter_approved_machine_accounts:
+    SubjectUserName|endswith: '$'
+  condition: selection and not filter_approved_machine_accounts
+falsepositives:
+  - Approved identity synchronization and directory migration services
+level: critical
+tags:
+  - attack.credential-access
+  - attack.t1003.006
+

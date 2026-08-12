@@ -1,0 +1,10 @@
+// SentinelForge SF-006 — process telemetry precursor for LSASS memory acquisition.
+// Pair with Defender DeviceEvents credential-access signals where licensing permits.
+let TimeWindow = 10m;
+DeviceProcessEvents
+| where Timestamp > ago(TimeWindow)
+| where
+    (FileName in~ ("procdump.exe", "procdump64.exe") and ProcessCommandLine has "lsass")
+    or (FileName =~ "rundll32.exe" and ProcessCommandLine has_all ("comsvcs.dll", "MiniDump"))
+| project Timestamp, DeviceName, AccountUpn, FileName, ProcessCommandLine, InitiatingProcessFileName, SHA256, ReportId
+

@@ -1,0 +1,35 @@
+rule_id: SF-001
+title: Password spray across multiple Microsoft Entra ID accounts
+description: Detects one source address producing failed sign-ins across five or more distinct identities in ten minutes, a pattern consistent with password spraying.
+severity: high
+status: stable
+required_data_sources: [SigninLogs]
+kql_file: query.kql
+sigma_file: null
+evaluator: password_spray
+mitre_attack:
+  - tactic: TA0006
+    tactic_name: Credential Access
+    technique: T1110.003
+    technique_name: Password Spraying
+entity_mappings:
+  account: UserPrincipalName
+  ip: IPAddress
+known_false_positives:
+  - Misconfigured applications or identity-health checks attempting several lab accounts from one egress address.
+  - Authorized authentication testing in a dedicated synthetic tenant.
+investigation_steps:
+  - Review targeted identities, failure reasons, source reputation, user agents, and conditional-access outcomes.
+  - Search for a later success from the same source or against one of the targeted identities.
+  - Confirm that the source is not an approved proxy, VPN egress, or synthetic test runner.
+containment_recommendations:
+  - Require human approval before recommending token revocation or a password reset for any affected identity.
+  - Block the source only through an approved production change process after validating shared-egress impact.
+threshold: 5
+time_window_minutes: 10
+tuning_required: false
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial rule with distinct-account threshold and paired regression fixtures.

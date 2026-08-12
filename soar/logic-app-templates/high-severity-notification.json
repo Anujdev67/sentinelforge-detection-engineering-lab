@@ -1,0 +1,18 @@
+{
+  "artifact_type": "logic-app-pseudodeployment",
+  "artifact_version": "1.0.0",
+  "name": "sentinelforge-high-severity-notification",
+  "deployable": false,
+  "simulation_notice": "Architecture reference only. Recipients and ticket routing must be configured by an authorized owner.",
+  "trigger": {"connector": "Microsoft Sentinel", "event": "high-severity-incident-created"},
+  "approval_gate": {"required": true, "separation_of_duties": true, "before": "external-notification"},
+  "steps": [
+    {"order": 1, "connector": "Microsoft Sentinel", "operation": "get-sanitized-incident-summary", "mode": "read-only"},
+    {"order": 2, "connector": "Approvals", "operation": "approve-audience-and-content", "mode": "approval"},
+    {"order": 3, "connector": "Microsoft Teams or Email", "operation": "send-approved-summary", "mode": "notification"},
+    {"order": 4, "connector": "ServiceNow", "operation": "create-or-update-security-incident", "mode": "ticketing"},
+    {"order": 5, "connector": "Microsoft Sentinel", "operation": "record-notification-result", "mode": "write-incident-only"}
+  ],
+  "forbidden_actions": ["send-without-approval", "include-raw-credentials", "close-incident"],
+  "audit": {"record_actor": true, "record_decision": true, "record_connector_result": true}
+}

@@ -1,0 +1,8 @@
+// SentinelForge SF-009 — use a governed watchlist for approved devices and support windows.
+let TimeWindow = 15m;
+let RemoteTools = dynamic(["anydesk.exe", "teamviewer.exe", "teamviewer_service.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(TimeWindow)
+| where FileName in~ (RemoteTools)
+| project Timestamp, DeviceName, AccountUpn, FileName, ProcessCommandLine, FolderPath, SHA256, InitiatingProcessFileName, ReportId
+

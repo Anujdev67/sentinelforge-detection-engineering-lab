@@ -1,0 +1,16 @@
+{
+  "artifact_type": "logic-app-pseudodeployment",
+  "artifact_version": "1.0.0",
+  "name": "sentinelforge-ioc-enrichment",
+  "deployable": false,
+  "simulation_notice": "Architecture reference only. Production enrichment requires an approved provider, DPA, quota, and secret store.",
+  "trigger": {"connector": "Microsoft Sentinel", "event": "incident-entity-added"},
+  "approval_gate": {"required": true, "separation_of_duties": true, "before": "publishing-or-blocking-an-indicator"},
+  "steps": [
+    {"order": 1, "connector": "Microsoft Sentinel", "operation": "get-ip-domain-and-hash-entities", "mode": "read-only"},
+    {"order": 2, "connector": "Approved threat intelligence", "operation": "lookup-observables", "mode": "read-only"},
+    {"order": 3, "connector": "Microsoft Sentinel", "operation": "add-enrichment-comment", "mode": "write-incident-only"}
+  ],
+  "forbidden_actions": ["block-ip", "publish-indicator", "submit-file"],
+  "audit": {"record_actor": true, "record_decision": true, "record_connector_result": true}
+}

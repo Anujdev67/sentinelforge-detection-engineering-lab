@@ -1,0 +1,30 @@
+// SentinelForge SF-003 — tune trusted VPN ranges and named locations before production use.
+let TimeWindow = 2h;
+let SpeedThresholdKph = 900.0;
+SigninLogs
+| where TimeGenerated > ago(TimeWindow)
+| where ResultType == "0" and isnotempty(LocationDetails.geoCoordinates.latitude)
+| project
+    TimeGenerated,
+    UserPrincipalName,
+    IPAddress,
+    Country = tostring(LocationDetails.countryOrRegion),
+    Latitude = todouble(LocationDetails.geoCoordinates.latitude),
+    Longitude = todouble(LocationDetails.geoCoordinates.longitude)
+| sort by UserPrincipalName asc, TimeGenerated asc
+| serialize
+| extend
+    PreviousUser = prev(UserPrincipalName),
+    PreviousTime = prev(TimeGenerated),
+    PreviousIP = prev(IPAddress),
+    PreviousLatitude = prev(Latitude),
+    PreviousLongitude = prev(Longitude)
+| where UserPrincipalName == PreviousUser
+| extend
+    Hours = datetime_diff("second", TimeGenerated, PreviousTime) / 3600.0,
+    DistanceKm = geo_distance_2points(Longitude, Latitude, PreviousLongitude, PreviousLatitude) / 1000.0
+| where Hours > 0.0
+| extend ImpliedSpeedKph = DistanceKm / Hours
+| where ImpliedSpeedKph >= SpeedThresholdKph
+| project TimeGenerated, PreviousTime, UserPrincipalName, IPAddress, PreviousIP, Country, DistanceKm, ImpliedSpeedKph
+

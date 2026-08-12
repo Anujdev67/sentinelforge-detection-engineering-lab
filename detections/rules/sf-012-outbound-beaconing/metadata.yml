@@ -1,0 +1,36 @@
+rule_id: SF-012
+title: Palo Alto-style periodic outbound beaconing
+description: Detects six or more allowed outbound firewall sessions between one source and destination with a low-jitter interval between thirty and 120 seconds.
+severity: medium
+status: stable
+required_data_sources: [CommonSecurityLog]
+kql_file: query.kql
+sigma_file: null
+evaluator: outbound_beaconing
+mitre_attack:
+  - tactic: TA0011
+    tactic_name: Command and Control
+    technique: T1071.001
+    technique_name: Web Protocols
+entity_mappings:
+  ip: SourceIP
+  host: SourceHostName
+  port: DestinationPort
+known_false_positives:
+  - Health checks, software updaters, monitoring agents, and keepalive traffic with regular intervals.
+  - Network-address translation that aggregates several devices behind one source address.
+investigation_steps:
+  - Review application identification, destination ownership, TLS metadata, bytes, session duration, and source process evidence.
+  - Compare timing across longer windows and other devices to distinguish fleet software from an isolated host.
+  - Correlate the destination with DNS, proxy, endpoint, threat-intelligence, and change-management context.
+containment_recommendations:
+  - Recommend blocking the destination only after analyst validation of service dependencies and shared infrastructure.
+  - If malicious communication is confirmed, isolate the device through a human-approved workflow and preserve network evidence.
+threshold: 6
+time_window_minutes: 15
+tuning_required: true
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial low-jitter interval rule for Palo Alto-style CommonSecurityLog fields.

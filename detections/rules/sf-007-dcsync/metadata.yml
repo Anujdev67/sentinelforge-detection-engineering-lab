@@ -1,0 +1,37 @@
+rule_id: SF-007
+title: Unapproved directory replication consistent with DCSync
+description: Detects Windows directory-service object access containing replication-all rights when the initiating identity is not an approved replication principal.
+severity: critical
+status: stable
+required_data_sources: [SecurityEvent]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: dcsync_activity
+mitre_attack:
+  - tactic: TA0006
+    tactic_name: Credential Access
+    technique: T1003.006
+    technique_name: DCSync
+entity_mappings:
+  account: SubjectUserName
+  host: Computer
+  domain: SubjectDomainName
+known_false_positives:
+  - Authorized domain controllers and identity-synchronization services exercising replication rights.
+  - Approved directory migrations or recovery operations executed by a governed service identity.
+investigation_steps:
+  - Verify the subject identity, source host, domain-controller role, replication properties, and surrounding logons.
+  - Compare the principal against the governed directory-replication allowlist and recent privileged changes.
+  - Hunt for new credentials, lateral movement, directory reconnaissance, and unusual outbound connections.
+containment_recommendations:
+  - Escalate confirmed misuse for human-approved identity disablement and privileged credential rotation.
+  - Preserve domain-controller logs and assess replication exposure before recovery decisions.
+threshold: 1
+time_window_minutes: 15
+tuning_required: false
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial event 4662 replication-rights rule with governed allowlist requirement.
+

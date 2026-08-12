@@ -1,0 +1,78 @@
+[
+  {
+    "event_id": "evt-sf010-negative-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "DeviceNetworkEvents",
+    "event_type": "dns_query",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.53",
+    "action": "resolve",
+    "result": "success",
+    "correlation_id": "corr-sf010-negative",
+    "raw_event_ref": "synthetic://fixtures/sf010-negative-01",
+    "normalized": {
+      "protocol": "dns",
+      "query": "api.example.test",
+      "initiating_process": "training-agent.exe"
+    }
+  },
+  {
+    "event_id": "evt-sf010-negative-02",
+    "timestamp": "2026-02-03T14:01:00Z",
+    "event_source": "DeviceNetworkEvents",
+    "event_type": "dns_query",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.53",
+    "action": "resolve",
+    "result": "success",
+    "correlation_id": "corr-sf010-negative",
+    "raw_event_ref": "synthetic://fixtures/sf010-negative-02",
+    "normalized": {
+      "protocol": "dns",
+      "query": "api.example.test",
+      "initiating_process": "training-agent.exe"
+    }
+  },
+  {
+    "event_id": "evt-sf010-negative-03",
+    "timestamp": "2026-02-03T14:02:00Z",
+    "event_source": "DeviceNetworkEvents",
+    "event_type": "dns_query",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.53",
+    "action": "resolve",
+    "result": "success",
+    "correlation_id": "corr-sf010-negative",
+    "raw_event_ref": "synthetic://fixtures/sf010-negative-03",
+    "normalized": {
+      "protocol": "dns",
+      "query": "api.example.test",
+      "initiating_process": "training-agent.exe"
+    }
+  },
+  {
+    "event_id": "evt-sf010-negative-04",
+    "timestamp": "2026-02-03T14:03:00Z",
+    "event_source": "DeviceNetworkEvents",
+    "event_type": "dns_query",
+    "host": "ws-417.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.53",
+    "action": "resolve",
+    "result": "success",
+    "correlation_id": "corr-sf010-negative",
+    "raw_event_ref": "synthetic://fixtures/sf010-negative-04",
+    "normalized": {
+      "protocol": "dns",
+      "query": "api.example.test",
+      "initiating_process": "training-agent.exe"
+    }
+  }
+]

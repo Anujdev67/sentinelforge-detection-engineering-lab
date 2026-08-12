@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Exclude generated dependencies, caches, local databases, and Terraform providers."
+paths = [
+  '''(^|/)(\.venv|node_modules|dist|\.terraform|\.mypy_cache|\.ruff_cache|\.pytest-temp|__pycache__|work)(/|$)''',
+  '''(^|/).+\.db$''',
+]

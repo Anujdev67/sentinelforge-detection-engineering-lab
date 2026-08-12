@@ -1,0 +1,51 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-temp/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+dist/
+build/
+*.egg-info/
+
+# JavaScript
+node_modules/
+apps/dashboard/dist/
+apps/dashboard/coverage/
+
+# Runtime data and evidence exports
+*.db
+*.sqlite*
+postgres-data/
+artifacts/
+evidence-packages/
+quality-report.json
+work/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# IDE and operating system
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

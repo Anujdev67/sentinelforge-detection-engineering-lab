@@ -1,0 +1,36 @@
+rule_id: SF-003
+title: Anomalous geographic sign-in with impossible travel speed
+description: Detects consecutive successful sign-ins for one identity whose synthetic coordinates imply travel faster than 900 kilometres per hour within two hours.
+severity: high
+status: stable
+required_data_sources: [SigninLogs]
+kql_file: query.kql
+sigma_file: null
+evaluator: impossible_travel
+mitre_attack:
+  - tactic: TA0001
+    tactic_name: Initial Access
+    technique: T1078.004
+    technique_name: Cloud Accounts
+entity_mappings:
+  account: UserPrincipalName
+  ip: IPAddress
+known_false_positives:
+  - Corporate VPN, secure web gateway, or mobile carrier egress points changing between sign-ins.
+  - Service identities whose activity is generated from multiple cloud regions.
+investigation_steps:
+  - Validate location enrichment, VPN use, device identity, user agent, session identifiers, and sign-in risk.
+  - Ask the identity owner to confirm both sign-ins through an approved verification channel.
+  - Review nearby MFA changes, token use, mailbox activity, and directory operations.
+containment_recommendations:
+  - Recommend session revocation only after analyst confirmation that proxy or travel explanations do not apply.
+  - Add approved VPN egress ranges to a governed watchlist rather than weakening the speed threshold globally.
+threshold: 900
+time_window_minutes: 120
+tuning_required: true
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial coordinate-based travel-speed rule with VPN tuning guidance.
+

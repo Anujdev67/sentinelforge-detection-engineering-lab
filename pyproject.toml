@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sentinelforge"
+version = "1.0.0"
+description = "Local-first Microsoft Sentinel detection engineering and safe SOAR lab"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "SentinelForge contributors" }]
+dependencies = [
+  "alembic>=1.14,<2",
+  "fastapi>=0.115,<1",
+  "httpx>=0.28,<1",
+  "pydantic>=2.10,<3",
+  "pydantic-settings>=2.7,<3",
+  "psycopg[binary]>=3.2,<4",
+  "PyYAML>=6.0,<7",
+  "sqlalchemy>=2.0,<3",
+  "uvicorn[standard]>=0.34,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "jsonschema>=4.23,<5",
+  "mypy>=1.14,<2",
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "pySigma>=0.11,<2",
+  "ruff>=0.9,<1",
+  "types-jsonschema>=4.23,<5",
+  "types-PyYAML>=6.0,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["apps", "detections", "evaluators", "telemetry", "soar"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers --strict-config --basetemp=.pytest-temp"
+testpaths = ["tests", "apps/api/tests"]
+markers = [
+  "integration: tests crossing service or persistence boundaries",
+  "detection: positive, negative, and content quality checks",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["infrastructure/terraform/.terraform"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "DTZ", "PTH", "RUF", "S"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106"]
+"apps/api/tests/**/*.py" = ["S101", "S105", "S106"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+exclude = ["infrastructure/"]
+
+[[tool.mypy.overrides]]
+module = ["yaml.*"]
+ignore_missing_imports = true

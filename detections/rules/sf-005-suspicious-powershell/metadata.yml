@@ -1,0 +1,41 @@
+rule_id: SF-005
+title: Encoded or suspicious PowerShell execution
+description: Detects PowerShell processes using encoded-command, base64-decoding, download, or hidden-window indicators in Defender XDR process telemetry.
+severity: high
+status: stable
+required_data_sources: [DeviceProcessEvents]
+kql_file: query.kql
+sigma_file: rule.yml
+evaluator: suspicious_powershell
+mitre_attack:
+  - tactic: TA0002
+    tactic_name: Execution
+    technique: T1059.001
+    technique_name: PowerShell
+  - tactic: TA0005
+    tactic_name: Stealth
+    technique: T1027
+    technique_name: Obfuscated Files or Information
+entity_mappings:
+  account: AccountUpn
+  host: DeviceName
+  process: FileName
+known_false_positives:
+  - Signed device-management or software-deployment scripts that encode arguments for reliable transport.
+  - Administrative troubleshooting that uses hidden windows or approved download commands.
+investigation_steps:
+  - Decode content only in an isolated analysis workflow and inspect parent process, signer, hash, and initiating account.
+  - Correlate the process with network connections, file creation, persistence, and endpoint alerts.
+  - Validate whether the command matches an approved automation package or change record.
+containment_recommendations:
+  - Recommend endpoint isolation only through an approved Defender XDR process after scope and business impact are confirmed.
+  - Preserve the process tree, script-block evidence, and network indicators before remediation.
+threshold: 1
+time_window_minutes: 15
+tuning_required: true
+version: 1.0.0
+changelog:
+  - version: 1.0.0
+    date: 2026-08-11
+    changes: Initial command-line indicator rule with approved-automation tuning guidance.
+

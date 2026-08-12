@@ -1,0 +1,22 @@
+[
+  {
+    "event_id": "evt-sf007-positive-01",
+    "timestamp": "2026-02-03T14:00:00Z",
+    "event_source": "SecurityEvent",
+    "event_type": "directory_service_access",
+    "host": "dc-01.sentinelforge.test",
+    "user": "alex.morgan@example.test",
+    "source_ip": "198.51.100.77",
+    "destination_ip": "203.0.113.44",
+    "action": "replicate_directory",
+    "result": "success",
+    "correlation_id": "corr-sf007-positive",
+    "raw_event_ref": "synthetic://fixtures/sf007-positive-01",
+    "normalized": {
+      "event_id": 4662,
+      "properties": "DS-Replication-Get-Changes-All",
+      "domain": "sentinelforge.test",
+      "approved_directory_replication": false
+    }
+  }
+]

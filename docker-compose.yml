@@ -1,0 +1,62 @@
+name: sentinelforge
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?copy .env.example to .env}
+      POSTGRES_USER: ${POSTGRES_USER:?copy .env.example to .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?copy .env.example to .env}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks: [soc]
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    environment:
+      SENTINELFORGE_ENV: ${SENTINELFORGE_ENV:-development}
+      SENTINELFORGE_DEMO_MODE: ${SENTINELFORGE_DEMO_MODE:-false}
+      SENTINELFORGE_DATABASE_URL: ${SENTINELFORGE_DATABASE_URL:?copy .env.example to .env}
+      SENTINELFORGE_CORS_ORIGINS: ${SENTINELFORGE_CORS_ORIGINS:-http://localhost:5173}
+      SENTINELFORGE_API_URL: ${SENTINELFORGE_API_URL:-http://localhost:8000}
+      SENTINELFORGE_LOG_LEVEL: ${SENTINELFORGE_LOG_LEVEL:-INFO}
+      SENTINELFORGE_LIVE_REPUTATION_ENABLED: ${SENTINELFORGE_LIVE_REPUTATION_ENABLED:-false}
+      SENTINELFORGE_REPUTATION_CACHE_TTL_MINUTES: ${SENTINELFORGE_REPUTATION_CACHE_TTL_MINUTES:-60}
+      SENTINELFORGE_REPUTATION_TIMEOUT_SECONDS: ${SENTINELFORGE_REPUTATION_TIMEOUT_SECONDS:-8}
+      SENTINELFORGE_VIRUSTOTAL_API_KEY: ${SENTINELFORGE_VIRUSTOTAL_API_KEY:-}
+      SENTINELFORGE_ABUSEIPDB_API_KEY: ${SENTINELFORGE_ABUSEIPDB_API_KEY:-}
+      SENTINELFORGE_GREYNOISE_API_KEY: ${SENTINELFORGE_GREYNOISE_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks: [soc]
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "5173:8080"
+    networks: [soc]
+
+volumes:
+  postgres-data:
+
+networks:
+  soc:
+    driver: bridge
