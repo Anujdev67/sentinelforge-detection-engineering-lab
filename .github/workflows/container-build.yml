@@ -1,0 +1,19 @@
+name: Container build verification
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  compose-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate Compose model
+        run: docker compose --env-file .env.example config --quiet
+      - name: Build API and dashboard
+        run: docker compose --env-file .env.example build
