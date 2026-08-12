@@ -22,7 +22,7 @@ Push-Location $RepositoryRoot
 try {
     switch ($Command) {
         'setup' {
-            if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+            Invoke-Checked { python -m scripts.create_env }
             Invoke-Checked { python -m pip install -e ".[dev]" }
             Push-Location apps/dashboard
             try { Invoke-Checked { pnpm install --frozen-lockfile } } finally { Pop-Location }
