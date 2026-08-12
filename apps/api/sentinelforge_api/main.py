@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator, Generator
+from collections.abc import AsyncIterator, Awaitable, Callable, Generator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from typing import Annotated, Any
@@ -11,6 +11,8 @@ import httpx
 import yaml
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from starlette.responses import Response
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
@@ -159,12 +161,32 @@ def create_app(*, settings: Settings | None = None, database_url: str | None = N
     application.state.database = application_database
     application.state.settings = configured
     application.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=configured.allowed_host_list,
+    )
+    application.add_middleware(
         CORSMiddleware,
         allow_origins=configured.cors_origin_list,
         allow_credentials=False,
         allow_methods=["GET", "POST", "PATCH"],
         allow_headers=["Content-Type", "Accept"],
     )
+
+    @application.middleware("http")
+    async def add_security_headers(
+        request: Request,
+        call_next: Callable[[Request], Awaitable[Response]],
+    ) -> Response:
+        response = await call_next(request)
+        response.headers.setdefault("Cache-Control", "no-store")
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "no-referrer")
+        response.headers.setdefault(
+            "Permissions-Policy",
+            "camera=(), geolocation=(), microphone=()",
+        )
+        return response
 
     @application.get(f"{API_PREFIX}/health", response_model=HealthResponse, tags=["system"])
     def health(session: SessionDependency) -> HealthResponse:
