@@ -8,7 +8,7 @@ Do not paste or import employer, customer, production tenant, incident, identity
 
 ## Secrets
 
-`.env.example` contains change-me local placeholders. Copy it to ignored `.env` and replace the database password for your machine. Never commit:
+`.env.example` contains non-secret placeholders. Run `python -m scripts.create_env` (or `make setup`) to create ignored `.env` once with a cryptographically random local database password. Never commit:
 
 - `.env` files other than `.env.example`;
 - Azure client secrets, certificates, tokens, subscription/tenant identifiers, or exported connection objects;
@@ -51,7 +51,7 @@ quota, licensing, retention, and privacy terms before enabling it.
 
 ## Deployment boundaries
 
-- The API has no authentication and is suitable only for a loopback/private local lab.
+- The API has no authentication. Supported Docker Compose ports bind to `127.0.0.1` only, enforce explicit trusted hosts/CORS origins, and are suitable only for a local lab.
 - The Compose database has no published host port.
 - Azure rules and automation are disabled by default.
 - The Entra connector is opt-in and requires a separate same-tenant permission review.
@@ -61,3 +61,15 @@ quota, licensing, retention, and privacy terms before enabling it.
 ## Reporting a secret exposure
 
 Stop using the exposed value, revoke/rotate it through its owning platform, remove it from Git history using an approved process, and rerun secret scanning. Do not paste the value into an issue or chat while requesting help.
+
+
+## Repository supply-chain controls
+
+GitHub Actions are pinned to immutable commit SHAs and run with job-level least privilege.
+CodeQL, dependency review, Gitleaks, production dependency audits, container image scanning,
+Dependabot, CODEOWNERS, and security regression tests cover the committed source and build
+configuration. Treat a green scan as evidence for a point in time, not a guarantee.
+
+Repository administrators should enable private vulnerability reporting, secret scanning,
+push protection, Dependabot alerts/security updates, and a `main` ruleset requiring all
+security checks and CODEOWNER review. Do not bypass a failed check to publish a change.
