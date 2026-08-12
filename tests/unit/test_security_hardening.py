@@ -67,3 +67,20 @@ def test_local_environment_generator_uses_a_random_password(tmp_path: Path) -> N
 
 
 _PASSWORD_PLACEHOLDER = "change-me-locally"
+
+
+def test_container_base_images_are_pinned_to_digests() -> None:
+    digest = re.compile(r"@sha256:[0-9a-f]{64}(?:\s|$)")
+    for dockerfile in (
+        REPOSITORY_ROOT / "apps" / "api" / "Dockerfile",
+        REPOSITORY_ROOT / "apps" / "dashboard" / "Dockerfile",
+    ):
+        from_lines = [
+            line for line in dockerfile.read_text(encoding="utf-8").splitlines()
+            if line.startswith("FROM ")
+        ]
+        assert from_lines
+        assert all(digest.search(line) for line in from_lines)
+
+    compose = yaml.safe_load((REPOSITORY_ROOT / "docker-compose.yml").read_text(encoding="utf-8"))
+    assert digest.search(compose["services"]["db"]["image"])
