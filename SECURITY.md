@@ -74,14 +74,12 @@ Create `.git/hooks/pre-push`:
 #!/usr/bin/env bash
 set -euo pipefail
 
-remote_ref="${1:-origin/main}"
-base_ref="${remote_ref#*/}"
-base_ref="${base_ref:-main}"
-
-if git show-ref --verify --quiet "refs/remotes/origin/${base_ref}"; then
-  range="origin/${base_ref}..HEAD"
-else
+if git show-ref --verify --quiet "refs/remotes/origin/main"; then
+  range="origin/main..HEAD"
+elif git rev-parse --verify --quiet HEAD~1 >/dev/null; then
   range="HEAD~1..HEAD"
+else
+  range="HEAD"
 fi
 
 for sha in $(git rev-list "${range}"); do
