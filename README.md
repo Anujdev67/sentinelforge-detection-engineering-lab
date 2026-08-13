@@ -181,6 +181,7 @@ Each case uses deterministic alerts and entities visible after the demo reset, i
 - GitHub Actions use read-only repository permissions and a dedicated Gitleaks workflow.
 
 Read the complete [security, privacy, and secrets guide](docs/security-and-privacy.md).
+Repository policy, vulnerability reporting, and branch/commit protection requirements are in [SECURITY.md](SECURITY.md).
 
 ## Repository map
 
